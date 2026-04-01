@@ -657,3 +657,157 @@ html, body {
 }
 .empty-icon { font-size: 40px; margin-bottom: 12px; }
 </style>
+
+/* ── MAP ── */
+.map-wrap { display: flex; flex-direction: column; height: 100%; }
+.map-area {
+  flex: 1; position: relative;
+  background: #111814;
+  overflow: hidden; min-height: 0;
+}
+.map-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.map-road-h { position: absolute; height: 2px; background: rgba(255,255,255,0.05); left:0; right:0; }
+.map-road-v { position: absolute; width: 2px; background: rgba(255,255,255,0.05); top:0; bottom:0; }
+.map-park { position: absolute; border-radius: 8px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.18); }
+.map-my-loc {
+  position: absolute; width: 14px; height: 14px;
+  border-radius: 50%; background: #378ADD;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 8px rgba(55,138,221,0.15);
+  transform: translate(-50%,-50%);
+  z-index: 5;
+}
+.map-controls-top {
+  position: absolute; top: 12px; left: 12px; right: 12px; z-index: 10;
+}
+.map-search {
+  background: rgba(20,20,20,0.92); border: 0.5px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 9px 12px;
+  font-size: 13px; color: #555;
+  display: flex; align-items: center; gap: 8px;
+  backdrop-filter: blur(8px);
+}
+.map-filter-col {
+  position: absolute; bottom: 16px; left: 12px;
+  display: flex; flex-direction: column; gap: 5px; z-index: 10;
+}
+.map-filt {
+  background: rgba(20,20,20,0.92); border: 0.5px solid rgba(255,255,255,0.12);
+  border-radius: 20px; padding: 5px 12px;
+  font-size: 11px; color: #888; cursor: pointer;
+  font-family: var(--font-body);
+  backdrop-filter: blur(8px);
+  transition: all 0.15s;
+}
+.map-filt.active { background: rgba(29,158,117,0.2); border-color: #1D9E75; color: #5DCAA5; }
+
+.map-marker {
+  position: absolute; transform: translate(-50%, -100%);
+  cursor: pointer; z-index: 8;
+  transition: transform 0.15s;
+}
+.map-marker:hover { transform: translate(-50%, -100%) scale(1.1); }
+.map-marker.selected .marker-pin { border-color: #fff; }
+.marker-pin {
+  width: 38px; height: 38px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.marker-emoji { transform: rotate(45deg); font-size: 17px; display: block; }
+.marker-label {
+  background: rgba(20,20,20,0.9); color: #f0ede8;
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  white-space: nowrap; margin: 2px auto 0;
+  border: 0.5px solid rgba(255,255,255,0.1);
+  text-align: center; max-width: 80px;
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+.map-bottom {
+  background: #141414;
+  border-top: 0.5px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.map-bottom-inner { padding: 12px 16px; }
+.map-card-row { display: flex; align-items: center; gap: 10px; }
+.map-card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.map-card-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.map-card-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.map-card-btn {
+  margin-left: auto; font-size: 12px; font-weight: 500;
+  padding: 6px 14px; border-radius: 20px;
+  background: var(--accent); color: #fff;
+  border: none; cursor: pointer; flex-shrink: 0;
+  font-family: var(--font-body);
+}
+.map-empty {
+  text-align: center; padding: 16px;
+  font-size: 13px; color: var(--text3);
+}
+
+/* ── CLUB PAGE ── */
+.club-page-back {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer; flex-shrink: 0;
+  background: var(--bg);
+}
+.club-back-arrow { color: var(--accent); font-size: 20px; line-height: 1; }
+.club-back-label { font-size: 13px; color: var(--text2); }
+.club-hero {
+  height: 130px; display: flex; align-items: center;
+  justify-content: center; font-size: 56px; flex-shrink: 0;
+}
+.club-info-block { padding: 14px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.club-info-name { font-family: var(--font-display); font-size: 20px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+.club-info-meta { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.club-info-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.club-info-tag { font-size: 10px; padding: 3px 8px; border-radius: 20px; background: rgba(29,158,117,0.12); color: #5DCAA5; }
+.club-info-desc { font-size: 13px; color: var(--text2); margin-top: 10px; line-height: 1.6; }
+.club-join-big {
+  display: block; margin: 12px 16px 0;
+  width: calc(100% - 32px);
+  padding: 12px; background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 500;
+  font-family: var(--font-body); cursor: pointer;
+  transition: background 0.15s;
+}
+.club-join-big:hover { background: var(--accent-dark); }
+.club-join-big.joined { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+
+.club-event-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.club-event-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.club-event-title { font-size: 13px; font-weight: 500; color: var(--text); }
+.club-event-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.club-event-btn {
+  margin-left: auto; font-size: 10px; padding: 4px 10px;
+  border-radius: 20px; border: 1px solid var(--accent);
+  background: none; color: var(--accent);
+  font-family: var(--font-body); cursor: pointer; flex-shrink: 0;
+}
+
+.club-member-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.club-member-ava {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; flex-shrink: 0;
+}
+.club-member-name { font-size: 13px; color: var(--text); }
+.club-member-role { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.club-member-pct { margin-left: auto; font-size: 11px; color: var(--accent); white-space: nowrap; }
