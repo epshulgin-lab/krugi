@@ -157,6 +157,59 @@
       </div>
     </section>
 
+    <!-- MAP -->
+    <section class="screen" id="screen-map">
+      <div class="map-wrap">
+        <div class="map-area" id="mapArea">
+          <div class="map-grid"></div>
+          <div class="map-road-h" style="top:38%"></div>
+          <div class="map-road-h" style="top:62%"></div>
+          <div class="map-road-v" style="left:33%"></div>
+          <div class="map-road-v" style="left:67%"></div>
+          <div class="map-park" style="left:8%;top:12%;width:22%;height:18%;"></div>
+          <div class="map-park" style="left:54%;top:48%;width:20%;height:22%;"></div>
+          <div class="map-my-loc" style="left:47%;top:50%;"></div>
+          <div id="mapMarkers"></div>
+          <div class="map-controls-top">
+            <div class="map-search">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#555" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Поиск на карте...</span>
+            </div>
+          </div>
+          <div class="map-filter-col">
+            <button class="map-filt active" data-mf="all" onclick="mapFilter('all',this)">Все</button>
+            <button class="map-filt" data-mf="events" onclick="mapFilter('events',this)">События</button>
+            <button class="map-filt" data-mf="people" onclick="mapFilter('people',this)">Люди</button>
+          </div>
+        </div>
+        <div class="map-bottom" id="mapBottom">
+          <div class="map-bottom-inner" id="mapBottomInner"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLUB PAGE -->
+    <section class="screen" id="screen-club">
+      <div class="club-page-back" onclick="switchScreen('clubs', document.querySelector('[data-screen=clubs]'))">
+        <span class="club-back-arrow">‹</span>
+        <span class="club-back-label" id="clubBackLabel">Клубы</span>
+      </div>
+      <div class="screen-scroll" style="padding-top:0;">
+        <div class="club-hero" id="clubHero">🐕</div>
+        <div class="club-info-block">
+          <div class="club-info-name" id="clubInfoName">Корги Москвы</div>
+          <div class="club-info-meta" id="clubInfoMeta">234 участника</div>
+          <div class="club-info-tags" id="clubInfoTags"></div>
+          <p class="club-info-desc" id="clubInfoDesc"></p>
+        </div>
+        <button class="club-join-big" id="clubJoinBtn" onclick="joinCurrentClub()">Вступить в клуб</button>
+        <div class="section-label" style="padding:12px 16px 4px;">Ближайшие события</div>
+        <div id="clubEventsList"></div>
+        <div class="section-label" style="padding:12px 16px 4px;">Участники</div>
+        <div id="clubMembersList"></div>
+      </div>
+    </section>
+
     <!-- MATCHES -->
     <section class="screen" id="screen-matches">
       <div class="screen-scroll">
@@ -218,6 +271,10 @@
     <button class="nav-btn" data-screen="clubs" onclick="switchScreen('clubs', this)">
       <svg viewBox="0 0 22 22" fill="none"><circle cx="8" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 19c0-2.8 2.2-5 5-5h6c2.8 0 5 2.2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <span>Клубы</span>
+    </button>
+    <button class="nav-btn" data-screen="map" onclick="switchScreen('map', this)">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M11 3C8 3 5.5 5.5 5.5 8.5c0 4.5 5.5 10.5 5.5 10.5s5.5-6 5.5-10.5C16.5 5.5 14 3 11 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="11" cy="8.5" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span>Карта</span>
     </button>
     <button class="nav-btn" data-screen="matches" onclick="switchScreen('matches', this)">
       <svg viewBox="0 0 22 22" fill="none"><path d="M11 4C8.2 4 6 6.2 6 9c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="11" cy="9" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
