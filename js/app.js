@@ -449,6 +449,8 @@ function openClubPage(id, fromScreen) {
   const btn = document.getElementById('clubJoinBtn');
   btn.textContent = joined ? 'Вы участник ✓' : 'Вступить в клуб';
   btn.className = 'club-join-big' + (joined ? ' joined' : '');
+  const adminBtn = document.getElementById('clubAdminBtn');
+  if (adminBtn) adminBtn.style.display = c.mine ? 'block' : 'none';
 
   // events for this club tag
   const clubEvents = EVENTS.filter(e => e.tag === c.tag).slice(0, 2);
@@ -516,4 +518,127 @@ function switchScreen(name, btn) {
   if (name === 'club') {
     // no nav highlight for club page
   }
+}
+
+// ── INTERESTS PAGE ────────────────────────────────────────────────────
+const ALL_INTERESTS = [
+  '🐕 Собаки','📚 Книги','🏃 Бег','💡 Стартапы','🧘 Йога','🎬 Кино',
+  '🎲 Настолки','📷 Фото','🚴 Велосипед','📈 Инвестиции','🎸 Музыка',
+  '⛺ Походы','👨‍🍳 Готовка','🌍 Языки','🎨 Искусство','💃 Танцы'
+];
+
+function openInterests() {
+  renderInterestsPage();
+  switchScreen('interests', null);
+}
+
+function renderInterestsPage() {
+  const sel = document.getElementById('selectedTagsPage');
+  const all = document.getElementById('allTagsPage');
+
+  sel.innerHTML = state.interests.map(t => `
+    <span class="int-tag sel" onclick="removeInterest('${t}')">${t} ✕</span>`).join('');
+  if (!sel.innerHTML) sel.innerHTML = '<span style="font-size:12px;color:var(--text3);">Пока не выбрано</span>';
+
+  all.innerHTML = ALL_INTERESTS
+    .filter(t => !state.interests.includes(t.split(' ').slice(1).join(' ')))
+    .map(t => `<span class="int-tag" onclick="toggleInterestTag(this,'${t}')">${t}</span>`).join('');
+}
+
+function removeInterest(tag) {
+  state.interests = state.interests.filter(t => t !== tag);
+  renderInterestsPage();
+}
+
+function toggleInterestTag(el, tag) {
+  el.classList.toggle('sel');
+  const label = tag.split(' ').slice(1).join(' ');
+  if (el.classList.contains('sel')) {
+    if (!state.interests.includes(label)) state.interests.push(label);
+  } else {
+    state.interests = state.interests.filter(t => t !== label);
+  }
+}
+
+function addCustomInterest() {
+  const inp = document.getElementById('customInterestInput');
+  const val = inp.value.trim();
+  if (!val) { toast('Введите название интереса'); return; }
+  if (!state.interests.includes(val)) state.interests.push(val);
+  inp.value = '';
+  renderInterestsPage();
+  toast('Интерес добавлен!');
+}
+
+function addSuggestInterest(el) {
+  const label = el.textContent.split(' ').slice(1).join(' ');
+  if (!state.interests.includes(label)) state.interests.push(label);
+  el.classList.add('used');
+  renderInterestsPage();
+}
+
+function saveInterests() {
+  saveState();
+  renderMatches();
+  const tagsEl = document.getElementById('profileTags');
+  if (tagsEl) tagsEl.innerHTML = state.interests.slice(0,6).map(t => `<span class="profile-tag">${t}</span>`).join('');
+  switchScreen('profile', document.querySelector('[data-screen=profile]'));
+  toast('Интересы сохранены!');
+}
+
+// ── ADMIN PAGE ────────────────────────────────────────────────────────
+function openAdminPage(clubId) {
+  const c = CLUBS.find(cl => cl.id === clubId);
+  if (!c) return;
+
+  document.getElementById('adminBackLabel').textContent = c.name;
+  document.getElementById('adminClubHeader').innerHTML = `
+    <div class="club-icon-sm" style="background:${c.bg};">${c.emoji}</div>
+    <div>
+      <div style="font-size:14px;font-weight:500;color:var(--text);">${c.name}</div>
+      <span class="club-role-badge">Организатор</span>
+    </div>`;
+
+  document.getElementById('adminStats').innerHTML = `
+    <div class="admin-stat"><div class="admin-stat-n">${c.members}</div><div class="admin-stat-l">участников</div></div>
+    <div class="admin-stat"><div class="admin-stat-n">12</div><div class="admin-stat-l">событий</div></div>
+    <div class="admin-stat"><div class="admin-stat-n">+18</div><div class="admin-stat-l">за месяц</div></div>`;
+
+  document.getElementById('adminMenuItems').innerHTML = `
+    <div class="admin-menu-item">
+      <div class="admin-menu-icon" style="background:#1a3329;">📅</div>
+      <div><div class="admin-menu-name">Создать событие</div><div class="admin-menu-desc">Новое мероприятие для клуба</div></div>
+      <span style="color:var(--text3);font-size:16px;">›</span>
+    </div>
+    <div class="admin-menu-item">
+      <div class="admin-menu-icon" style="background:#1e1a2e;">📢</div>
+      <div><div class="admin-menu-name">Объявление участникам</div><div class="admin-menu-desc">Отправить сообщение всем</div></div>
+      <span class="admin-badge pro">Pro</span>
+    </div>
+    <div class="admin-menu-item">
+      <div class="admin-menu-icon" style="background:#2a1f0a;">✅</div>
+      <div><div class="admin-menu-name">Заявки на вступление</div><div class="admin-menu-desc">3 заявки ожидают</div></div>
+      <span class="admin-badge warn">3</span>
+    </div>
+    <div class="admin-menu-item">
+      <div class="admin-menu-icon" style="background:#1a2a1e;">📊</div>
+      <div><div class="admin-menu-name">Аналитика клуба</div><div class="admin-menu-desc">Рост, активность, удержание</div></div>
+      <span class="admin-badge pro">Pro</span>
+    </div>`;
+
+  const members = CLUB_MEMBERS[clubId] || [];
+  document.getElementById('adminMembersList').innerHTML = members.map((m, i) => `
+    <div class="member-manage-row">
+      <div class="mm-ava" style="background:${m.bg};color:${m.color};">${m.initials}</div>
+      <div style="flex:1;">
+        <div class="mm-name">${m.name}</div>
+        <div class="mm-role">${m.role}</div>
+      </div>
+      <div class="mm-btns">
+        ${i === 0 ? '' : `<button class="mm-btn promote" onclick="toast('${m.name} назначен модератором')">Модер.</button>
+        <button class="mm-btn remove" onclick="toast('${m.name} удалён из клуба')">Удалить</button>`}
+      </div>
+    </div>`).join('');
+
+  switchScreen('admin', null);
 }
