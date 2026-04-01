@@ -350,3 +350,170 @@ function resetApp() {
   localStorage.removeItem('krugi_user');
   location.reload();
 }
+
+// ── MAP DATA ─────────────────────────────────────────────────────────
+const MAP_MARKERS = [
+  { clubId:1, left:'24%', top:'34%' },
+  { clubId:2, left:'63%', top:'26%' },
+  { clubId:3, left:'76%', top:'54%' },
+  { clubId:4, left:'39%', top:'68%' },
+  { clubId:5, left:'55%', top:'19%' },
+  { clubId:6, left:'18%', top:'58%' },
+];
+
+let selectedMapClub = null;
+
+function renderMap() {
+  const markersEl = document.getElementById('mapMarkers');
+  markersEl.innerHTML = MAP_MARKERS.map(m => {
+    const c = CLUBS.find(cl => cl.id === m.clubId);
+    if (!c) return '';
+    return `
+    <div class="map-marker" id="mm-${c.id}" style="left:${m.left};top:${m.top};" onclick="selectMapClub(${c.id})">
+      <div class="marker-pin" style="background:${c.bg};">
+        <span class="marker-emoji">${c.emoji}</span>
+      </div>
+      <div class="marker-label">${c.name.split(' ')[0]} · ${c.members}</div>
+    </div>`;
+  }).join('');
+
+  // select first by default
+  selectMapClub(CLUBS[0].id);
+}
+
+function selectMapClub(id) {
+  selectedMapClub = id;
+  document.querySelectorAll('.map-marker').forEach(m => m.classList.remove('selected'));
+  const el = document.getElementById('mm-' + id);
+  if (el) el.classList.add('selected');
+
+  const c = CLUBS.find(cl => cl.id === id);
+  if (!c) return;
+
+  document.getElementById('mapBottomInner').innerHTML = `
+    <div class="map-card-row">
+      <div class="map-card-icon" style="background:${c.bg};">${c.emoji}</div>
+      <div>
+        <div class="map-card-title">${c.name}</div>
+        <div class="map-card-sub">${c.members.toLocaleString('ru')} участников · ${c.freq}</div>
+      </div>
+      <button class="map-card-btn" onclick="openClubPage(${c.id}, 'map')">Открыть →</button>
+    </div>`;
+}
+
+function mapFilter(type, btn) {
+  document.querySelectorAll('.map-filt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── CLUB PAGE ─────────────────────────────────────────────────────────
+let currentClubId = null;
+let clubFromScreen = 'clubs';
+
+const CLUB_MEMBERS = {
+  1: [
+    { initials:'АС', bg:'#1a3329', color:'#5DCAA5', name:'Анна С.', role:'Организатор · Сокольники', pct:92 },
+    { initials:'МК', bg:'#1e1a2e', color:'#AFA9EC', name:'Михаил К.', role:'Участник · Арбат', pct:74 },
+    { initials:'ТН', bg:'#2a1f0a', color:'#EF9F27', name:'Татьяна Н.', role:'Участник · Чистые пруды', pct:61 },
+  ],
+  2: [
+    { initials:'ЕВ', bg:'#1e1a2e', color:'#AFA9EC', name:'Елена В.', role:'Организатор · Арбат', pct:88 },
+    { initials:'ТН', bg:'#2a1f0a', color:'#EF9F27', name:'Татьяна Н.', role:'Участник', pct:71 },
+  ],
+};
+
+const CLUB_DESCS = {
+  1: 'Еженедельные прогулки владельцев корги и других коротколапых. Приходите с питомцами, знакомьтесь с хозяевами.',
+  2: 'Обсуждаем книги раз в две недели. Русская и зарубежная классика, современная проза. Читать необязательно.',
+  3: 'Бегаем каждое утро от Лужников. Темп 6 мин/км, после — кофе. Для всех уровней.',
+  4: 'Живые джем-сессии каждую пятницу. Приносите инструменты или просто приходите слушать.',
+  5: 'Нетворкинг для основателей и тех, кто думает о своём проекте. Завтраки, лекции, демо-дни.',
+  6: 'Играем в настолки дважды в неделю. Объясняем правила, подбираем игры по настроению.',
+};
+
+function openClubPage(id, fromScreen) {
+  currentClubId = id;
+  clubFromScreen = fromScreen || 'clubs';
+  const c = CLUBS.find(cl => cl.id === id);
+  if (!c) return;
+
+  document.getElementById('clubBackLabel').textContent = fromScreen === 'map' ? 'Карта' : 'Клубы';
+  document.getElementById('clubHero').style.background = c.bg;
+  document.getElementById('clubHero').textContent = c.emoji;
+  document.getElementById('clubInfoName').textContent = c.name;
+  document.getElementById('clubInfoMeta').textContent = `${c.members.toLocaleString('ru')} участников · ${c.freq}`;
+  document.getElementById('clubInfoTags').innerHTML = `<span class="club-info-tag">${c.tag}</span>`;
+  document.getElementById('clubInfoDesc').textContent = CLUB_DESCS[c.id] || 'Клуб по интересам.';
+
+  const joined = state.joinedClubs.has(id);
+  const btn = document.getElementById('clubJoinBtn');
+  btn.textContent = joined ? 'Вы участник ✓' : 'Вступить в клуб';
+  btn.className = 'club-join-big' + (joined ? ' joined' : '');
+
+  // events for this club tag
+  const clubEvents = EVENTS.filter(e => e.tag === c.tag).slice(0, 2);
+  document.getElementById('clubEventsList').innerHTML = clubEvents.map(e => `
+    <div class="club-event-row">
+      <div class="club-event-icon" style="background:${e.bg};">${e.emoji}</div>
+      <div>
+        <div class="club-event-title">${e.title}</div>
+        <div class="club-event-meta">${e.date} · ${e.place} · ${e.price}</div>
+      </div>
+      <button class="club-event-btn" onclick="toggleGoing(event,${e.id})">${state.going.has(e.id) ? 'Иду ✓' : 'Иду'}</button>
+    </div>`).join('') || '<div style="padding:12px 16px;font-size:13px;color:var(--text3);">Событий пока нет</div>';
+
+  // members
+  const members = CLUB_MEMBERS[id] || [];
+  document.getElementById('clubMembersList').innerHTML = members.map(m => `
+    <div class="club-member-row">
+      <div class="club-member-ava" style="background:${m.bg};color:${m.color};">${m.initials}</div>
+      <div>
+        <div class="club-member-name">${m.name}</div>
+        <div class="club-member-role">${m.role}</div>
+      </div>
+      <span class="club-member-pct">${m.pct}% совпадение</span>
+    </div>`).join('')
+    + `<div style="padding:10px 16px;font-size:12px;color:var(--text3);text-align:center;">+ ещё ${c.members - members.length} участников</div>`;
+
+  switchScreen('club', null);
+}
+
+function joinCurrentClub() {
+  if (!currentClubId) return;
+  if (state.joinedClubs.has(currentClubId)) return;
+  joinClub(currentClubId);
+  const btn = document.getElementById('clubJoinBtn');
+  btn.textContent = 'Вы участник ✓';
+  btn.className = 'club-join-big joined';
+}
+
+// patch club cards to be clickable
+const _origClubCard = clubCard;
+// override clubCard to open club page on click
+function clubCard(c, showJoin = false) {
+  return `
+  <div class="club-card" onclick="openClubPage(${c.id}, 'clubs')">
+    <div class="club-icon" style="background:${c.bg}">${c.emoji}</div>
+    <div class="club-info">
+      <div class="club-name">${c.name}</div>
+      <div class="club-sub">${c.members.toLocaleString('ru')} участников · ${c.freq}</div>
+    </div>
+    ${showJoin
+      ? `<button class="club-join" onclick="event.stopPropagation();joinClub(${c.id})">Вступить</button>`
+      : `<span class="club-chevron">›</span>`}
+  </div>`;
+}
+
+// patch switchScreen to render map on first open
+const _origSwitchScreen = switchScreen;
+function switchScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + name);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (name === 'map') renderMap();
+  if (name === 'club') {
+    // no nav highlight for club page
+  }
+}
