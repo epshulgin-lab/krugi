@@ -811,3 +811,56 @@ html, body {
 .club-member-name { font-size: 13px; color: var(--text); }
 .club-member-role { font-size: 11px; color: var(--text2); margin-top: 1px; }
 .club-member-pct { margin-left: auto; font-size: 11px; color: var(--accent); white-space: nowrap; }
+
+/* ── INTERESTS PAGE ── */
+.interests-page { display: flex; flex-direction: column; height: 100%; }
+.tag-grid-full { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
+.int-tag { font-size: 12px; padding: 6px 12px; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.12); color: #888; background: #1e1e1e; cursor: pointer; transition: all 0.15s; font-family: var(--font-body); }
+.int-tag.sel { background: rgba(29,158,117,0.15); border-color: var(--accent); color: #5DCAA5; }
+.int-tag.custom-tag { border-style: dashed; }
+.custom-row { display: flex; gap: 8px; margin: 10px 0; }
+.custom-inp { flex: 1; background: #1e1e1e; border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; color: var(--text); outline: none; font-family: var(--font-body); }
+.custom-inp:focus { border-color: var(--accent); }
+.custom-inp::placeholder { color: var(--text3); }
+.custom-add-btn { background: var(--accent); border: none; border-radius: var(--radius-sm); padding: 9px 14px; color: #fff; font-size: 13px; cursor: pointer; white-space: nowrap; font-family: var(--font-body); }
+.suggest-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.suggest-chip { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.04); color: #888; cursor: pointer; border: 0.5px solid rgba(255,255,255,0.08); font-family: var(--font-body); transition: all 0.15s; }
+.suggest-chip:hover { color: #5DCAA5; border-color: var(--accent); }
+.suggest-chip.used { opacity: 0.3; pointer-events: none; }
+.int-notice { font-size: 11px; color: var(--text3); background: #1a1a1a; border-radius: 8px; padding: 8px 10px; line-height: 1.5; margin-bottom: 12px; }
+
+/* ── ADMIN PAGE ── */
+.admin-page { display: flex; flex-direction: column; height: 100%; }
+.club-header-mini { display: flex; align-items: center; gap: 10px; background: var(--bg3); border-radius: var(--radius); padding: 12px; margin-bottom: 14px; }
+.club-icon-sm { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.club-role-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: rgba(29,158,117,0.15); color: #5DCAA5; margin-top: 3px; display: inline-block; }
+.admin-stats { display: flex; gap: 8px; margin-bottom: 14px; }
+.admin-stat { flex: 1; background: var(--bg3); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+.admin-stat-n { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text); }
+.admin-stat-l { font-size: 10px; color: var(--text2); margin-top: 2px; }
+.admin-menu-item { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: opacity 0.15s; }
+.admin-menu-item:last-child { border-bottom: none; }
+.admin-menu-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.admin-menu-name { font-size: 13px; color: var(--text); flex: 1; }
+.admin-menu-desc { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.admin-badge { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: var(--accent); color: #fff; flex-shrink: 0; }
+.admin-badge.warn { background: #BA7517; }
+.admin-badge.pro { background: #534AB7; }
+.member-manage-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.member-manage-row:last-child { border-bottom: none; }
+.mm-ava { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+.mm-name { font-size: 13px; color: var(--text); flex: 1; }
+.mm-role { font-size: 10px; color: var(--text2); }
+.mm-btns { display: flex; gap: 4px; }
+.mm-btn { font-size: 10px; padding: 3px 8px; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.15); background: none; color: var(--text2); cursor: pointer; font-family: var(--font-body); }
+.mm-btn.promote { border-color: rgba(29,158,117,0.5); color: #5DCAA5; }
+.mm-btn.remove { border-color: rgba(226,75,74,0.4); color: #E24B4A; }
+.plan-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.plan-card { flex: 1; border-radius: var(--radius-sm); padding: 12px; border: 1px solid rgba(255,255,255,0.08); background: var(--bg3); }
+.plan-card.current { border-color: var(--accent); background: rgba(29,158,117,0.08); }
+.plan-name { font-size: 12px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 4px; }
+.plan-curr { font-size: 9px; padding: 2px 6px; border-radius: 20px; background: var(--accent); color: #fff; }
+.plan-price { font-size: 16px; font-weight: 600; color: var(--text); margin: 6px 0 4px; font-family: var(--font-display); }
+.plan-price-sub { font-size: 11px; font-weight: 400; color: var(--text2); }
+.plan-feat { font-size: 10px; color: var(--text2); line-height: 1.7; }
+.plan-feat-hi { color: #5DCAA5; }
