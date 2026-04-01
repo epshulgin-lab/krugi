@@ -642,3 +642,116 @@ function openAdminPage(clubId) {
 
   switchScreen('admin', null);
 }
+
+// ── CHAT ──────────────────────────────────────────────────────────────
+const CHAT_MEMBERS = [
+  { initials:'АС', bg:'#1a3329', color:'#5DCAA5', name:'Анна С.', online:true, org:true },
+  { initials:'МК', bg:'#1e1a2e', color:'#AFA9EC', name:'Михаил К.', online:true },
+  { initials:'ТН', bg:'#2a1f0a', color:'#EF9F27', name:'Татьяна Н.', online:true },
+  { initials:'ДР', bg:'#1a2225', color:'#85B7EB', name:'Дмитрий Р.', online:true },
+  { initials:'ОС', bg:'#2a1a1a', color:'#F0997B', name:'Ольга С.', online:false },
+];
+
+const INITIAL_MESSAGES = [
+  { from:'АС', org:true, text:'Всем привет! Напоминаю — в субботу прогулка в Сокольниках в 10:00 🐕', time:'10:12' },
+  { from:'МК', text:'Буду! Можно прийти с другом, у него золотистый ретривер?', time:'10:15' },
+  { from:'АС', org:true, text:'Конечно, все четвероногие welcome 🐾', time:'10:16' },
+  { from:'ТН', img:true, bg:'#1a3329', emoji:'🐕📸', time:'10:22' },
+  { from:'ТН', text:'Вот моя Лея готовится 😄', time:'10:22' },
+  { from:'mine', reply:'↩ Анна С.: Все четвероногие welcome', text:'Идём! Нас будет трое с двумя корги', time:'10:31' },
+  { from:'ДР', text:'Кто едет с севера? Можем скоординироваться', time:'10:45' },
+];
+
+const AUTO_REPLIES = [
+  'Отлично, увидимся в субботу! 🐾',
+  'Договорились 👍',
+  'Супер, ждём вас!',
+  'Класс, будет весело 😄',
+  'Отличная идея!',
+  'Согласна 🐕',
+];
+
+let currentChatClubId = null;
+
+function openChat(clubId) {
+  currentChatClubId = clubId;
+  const c = CLUBS.find(cl => cl.id === clubId);
+  if (!c) return;
+
+  const onlineCount = CHAT_MEMBERS.filter(m => m.online).length;
+
+  document.getElementById('chatHeaderBar').innerHTML = `
+    <span class="chat-back" onclick="switchScreen('club', null);openClubPage(${clubId}, clubFromScreen)">‹</span>
+    <div class="chat-hicon" style="background:${c.bg};">${c.emoji}</div>
+    <div>
+      <div class="chat-htitle">${c.name}</div>
+      <div class="chat-hsub">${c.members} участников · ${onlineCount} онлайн</div>
+    </div>
+    <span class="chat-hmenu">⋯</span>`;
+
+  document.getElementById('chatOnlineBar').innerHTML = CHAT_MEMBERS.map(m => `
+    <div class="online-person">
+      <div class="online-ava-wrap">
+        <div class="online-ava" style="background:${m.bg};color:${m.color};">${m.initials}</div>
+        ${m.online ? '<div class="online-dot"></div>' : ''}
+      </div>
+      <span class="online-lbl">${m.name.split(' ')[0]}</span>
+    </div>`).join('');
+
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = '<div class="chat-date">Сегодня</div>';
+  INITIAL_MESSAGES.forEach(m => msgs.appendChild(buildMsg(m)));
+  msgs.scrollTop = msgs.scrollHeight;
+
+  switchScreen('chat', null);
+}
+
+function buildMsg(m) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (m.from === 'mine' ? 'mine' : 'other');
+  let inner = '';
+  if (m.from !== 'mine') {
+    const member = CHAT_MEMBERS.find(cm => cm.initials === m.from);
+    const orgClass = (member && member.org) ? ' org' : '';
+    inner += `<div class="chat-msg-author${orgClass}">${member ? member.name : m.from}${member && member.org ? ' · организатор' : ''}</div>`;
+  }
+  if (m.reply) inner += `<div class="chat-reply-preview">${m.reply}</div>`;
+  if (m.img) {
+    inner += `<div class="chat-img-bubble" style="background:${m.bg};">${m.emoji}</div>`;
+  } else {
+    inner += `<div class="chat-bubble">${m.text}</div>`;
+  }
+  inner += `<div class="chat-msg-time">${m.time}</div>`;
+  div.innerHTML = inner;
+  return div;
+}
+
+function sendChatMsg() {
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim();
+  if (!text) return;
+
+  const msgs = document.getElementById('chatMessages');
+  const now = new Date();
+  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+  const div = document.createElement('div');
+  div.className = 'chat-msg mine';
+  div.innerHTML = `<div class="chat-bubble">${text}</div><div class="chat-msg-time">${time}</div>`;
+  msgs.appendChild(div);
+  inp.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    const rnd = CHAT_MEMBERS.filter(m => m.online)[Math.floor(Math.random() * CHAT_MEMBERS.filter(m => m.online).length)];
+    const reply = AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)];
+    const rdiv = document.createElement('div');
+    rdiv.className = 'chat-msg other';
+    rdiv.innerHTML = `
+      <div class="chat-msg-author${rnd.org ? ' org' : ''}">${rnd.name}${rnd.org ? ' · организатор' : ''}</div>
+      <div class="chat-bubble">${reply}</div>
+      <div class="chat-msg-time">${time}</div>`;
+    msgs.appendChild(rdiv);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 900 + Math.random() * 600);
+}
