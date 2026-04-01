@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="description" content="Круги — найди своих людей рядом">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Круги">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Круги — найди своих</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-logo">
+    <div class="splash-rings">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+    </div>
+    <div class="splash-name">Круги</div>
+  </div>
+  <div class="splash-tagline">Найди своих людей рядом</div>
+</div>
+
+<!-- ONBOARDING -->
+<div class="onboard hidden" id="onboard">
+  <div class="onboard-bg"></div>
+  <div class="onboard-content">
+
+    <div class="onboard-step active" id="step-1">
+      <div class="step-eyebrow">Шаг 1 из 3</div>
+      <h1 class="step-title">Привет.<br>Как вас зовут?</h1>
+      <input class="big-input" type="text" id="userName" placeholder="Ваше имя" maxlength="30">
+      <div class="city-row">
+        <div class="city-label">Город</div>
+        <select class="city-select" id="userCity">
+          <option>Москва</option>
+          <option>Санкт-Петербург</option>
+          <option>Екатеринбург</option>
+          <option>Новосибирск</option>
+          <option>Казань</option>
+          <option>Нижний Новгород</option>
+          <option>Челябинск</option>
+          <option>Краснодар</option>
+        </select>
+      </div>
+      <button class="step-btn" onclick="goStep(2)">Продолжить →</button>
+    </div>
+
+    <div class="onboard-step" id="step-2">
+      <div class="step-eyebrow">Шаг 2 из 3</div>
+      <h1 class="step-title">Что вам<br>интересно?</h1>
+      <p class="step-sub">Выберите всё близкое — чем больше, тем точнее подбор</p>
+      <div class="interest-grid" id="interestGrid">
+        <button class="int-btn" data-tag="Собаки">🐕 Собаки</button>
+        <button class="int-btn" data-tag="Книги">📚 Книги</button>
+        <button class="int-btn" data-tag="Бег">🏃 Бег</button>
+        <button class="int-btn" data-tag="Стартапы">💡 Стартапы</button>
+        <button class="int-btn" data-tag="Йога">🧘 Йога</button>
+        <button class="int-btn" data-tag="Кино">🎬 Кино</button>
+        <button class="int-btn" data-tag="Настолки">🎲 Настолки</button>
+        <button class="int-btn" data-tag="Фото">📷 Фото</button>
+        <button class="int-btn" data-tag="Велосипед">🚴 Велосипед</button>
+        <button class="int-btn" data-tag="Инвестиции">📈 Инвестиции</button>
+        <button class="int-btn" data-tag="Музыка">🎸 Музыка</button>
+        <button class="int-btn" data-tag="Походы">⛺ Походы</button>
+        <button class="int-btn" data-tag="Готовка">👨‍🍳 Готовка</button>
+        <button class="int-btn" data-tag="Языки">🌍 Языки</button>
+        <button class="int-btn" data-tag="Искусство">🎨 Искусство</button>
+        <button class="int-btn" data-tag="Танцы">💃 Танцы</button>
+      </div>
+      <button class="step-btn" onclick="goStep(3)">Продолжить →</button>
+    </div>
+
+    <div class="onboard-step" id="step-3">
+      <div class="step-eyebrow">Шаг 3 из 3</div>
+      <h1 class="step-title">Последнее.<br>Кто вы?</h1>
+      <p class="step-sub">Это помогает найти близких по духу точнее</p>
+      <div class="role-grid">
+        <button class="role-btn" data-role="Предприниматель">Предприниматель</button>
+        <button class="role-btn" data-role="Сотрудник">Работаю в найме</button>
+        <button class="role-btn" data-role="Фрилансер">Фрилансер</button>
+        <button class="role-btn" data-role="Студент">Студент</button>
+        <button class="role-btn" data-role="Творческий">Творческая профессия</button>
+        <button class="role-btn" data-role="Другое">Другое</button>
+      </div>
+      <button class="step-btn" onclick="finishOnboard()">Найти моих людей →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app hidden" id="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">Круги</div>
+      <div class="topbar-city" id="topbarCity">Москва</div>
+    </div>
+    <div class="topbar-avatar" id="topbarAvatar">?</div>
+  </header>
+
+  <!-- SCREENS -->
+  <main class="screens">
+
+    <!-- FEED -->
+    <section class="screen active" id="screen-feed">
+      <div class="screen-scroll">
+        <div class="feed-greeting">
+          <span id="feedGreeting">Привет!</span>
+          <span class="feed-count" id="feedCount">14 событий на этой неделе</span>
+        </div>
+
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 20 20"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input class="search-input" placeholder="Найти клуб или событие..." readonly>
+        </div>
+
+        <div class="filter-row" id="filterRow">
+          <button class="filter-tag active" data-filter="all">Все</button>
+          <button class="filter-tag" data-filter="Собаки">Собаки</button>
+          <button class="filter-tag" data-filter="Книги">Книги</button>
+          <button class="filter-tag" data-filter="Бег">Бег</button>
+          <button class="filter-tag" data-filter="Стартапы">Стартапы</button>
+          <button class="filter-tag" data-filter="Музыка">Музыка</button>
+          <button class="filter-tag" data-filter="Настолки">Настолки</button>
+        </div>
+
+        <div class="section-label">Ближайшие события</div>
+        <div class="events-list" id="eventsList"></div>
+      </div>
+    </section>
+
+    <!-- CLUBS -->
+    <section class="screen" id="screen-clubs">
+      <div class="screen-scroll">
+        <div class="clubs-header">
+          <h2 class="clubs-title">Клубы</h2>
+          <button class="create-btn" onclick="showCreateClub()">+ Создать</button>
+        </div>
+
+        <div class="section-label">Мои клубы</div>
+        <div id="myClubsList"></div>
+
+        <div class="section-label">Рекомендуем вам</div>
+        <div id="recClubsList"></div>
+      </div>
+    </section>
+
+    <!-- MATCHES -->
+    <section class="screen" id="screen-matches">
+      <div class="screen-scroll">
+        <div class="matches-header">
+          <h2 class="matches-title">Близкие по духу</h2>
+          <p class="matches-sub">На основе ваших интересов</p>
+        </div>
+        <div id="matchesList"></div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="screen" id="screen-profile">
+      <div class="screen-scroll">
+        <div class="profile-card">
+          <div class="profile-avatar-big" id="profileAvatar">?</div>
+          <div class="profile-name" id="profileName">Пользователь</div>
+          <div class="profile-city-label" id="profileCityLabel">Москва</div>
+          <div class="profile-tags" id="profileTags"></div>
+        </div>
+        <div class="profile-stats">
+          <div class="pstat"><div class="pstat-n">2</div><div class="pstat-l">клуба</div></div>
+          <div class="pstat"><div class="pstat-n">7</div><div class="pstat-l">событий</div></div>
+          <div class="pstat"><div class="pstat-n">24</div><div class="pstat-l">знакомых</div></div>
+        </div>
+        <div class="profile-menu">
+          <div class="pmenu-item">
+            <div class="pmenu-icon" style="background:#E1F5EE;">🎯</div>
+            <span class="pmenu-text">Мои интересы</span>
+            <span class="pmenu-arrow">›</span>
+          </div>
+          <div class="pmenu-item">
+            <div class="pmenu-icon" style="background:#EEEDFE;">📅</div>
+            <span class="pmenu-text">История событий</span>
+            <span class="pmenu-arrow">›</span>
+          </div>
+          <div class="pmenu-item">
+            <div class="pmenu-icon" style="background:#E6F1FB;">🔔</div>
+            <span class="pmenu-text">Уведомления</span>
+            <span class="pmenu-arrow">›</span>
+          </div>
+          <div class="pmenu-item" onclick="resetApp()">
+            <div class="pmenu-icon" style="background:#FCEBEB;">🚪</div>
+            <span class="pmenu-text">Сбросить профиль</span>
+            <span class="pmenu-arrow">›</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-screen="feed" onclick="switchScreen('feed', this)">
+      <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="currentColor"/><rect x="12" y="3" width="7" height="7" rx="2" fill="currentColor"/><rect x="3" y="12" width="7" height="7" rx="2" fill="currentColor"/><rect x="12" y="12" width="7" height="7" rx="2" fill="currentColor"/></svg>
+      <span>Лента</span>
+    </button>
+    <button class="nav-btn" data-screen="clubs" onclick="switchScreen('clubs', this)">
+      <svg viewBox="0 0 22 22" fill="none"><circle cx="8" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 19c0-2.8 2.2-5 5-5h6c2.8 0 5 2.2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Клубы</span>
+    </button>
+    <button class="nav-btn" data-screen="matches" onclick="switchScreen('matches', this)">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M11 4C8.2 4 6 6.2 6 9c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="11" cy="9" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span>Люди</span>
+    </button>
+    <button class="nav-btn" data-screen="profile" onclick="switchScreen('profile', this)">
+      <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 19c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Профиль</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- EVENT MODAL -->
+<div class="modal-overlay hidden" id="eventModal">
+  <div class="modal" id="eventModalContent"></div>
+</div>
+
+<!-- CREATE CLUB MODAL -->
+<div class="modal-overlay hidden" id="createClubModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Создать клуб</h3>
+      <button class="modal-close" onclick="hideModal('createClubModal')">✕</button>
+    </div>
+    <input class="modal-input" type="text" id="newClubName" placeholder="Название клуба">
+    <select class="modal-select" id="newClubTag">
+      <option value="">Выберите интерес...</option>
+      <option>Собаки</option><option>Книги</option><option>Бег</option>
+      <option>Стартапы</option><option>Йога</option><option>Кино</option>
+      <option>Настолки</option><option>Фото</option><option>Велосипед</option>
+      <option>Музыка</option><option>Походы</option><option>Готовка</option>
+    </select>
+    <textarea class="modal-textarea" id="newClubDesc" placeholder="Описание клуба (о чём, для кого, как часто встречаетесь)"></textarea>
+    <button class="modal-btn" onclick="createClub()">Создать клуб</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
