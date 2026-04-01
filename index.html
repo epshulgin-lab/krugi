@@ -204,6 +204,7 @@
         </div>
         <button class="club-join-big" id="clubJoinBtn" onclick="joinCurrentClub()">Вступить в клуб</button>
         <button class="outline-btn" id="clubAdminBtn" style="display:none;width:calc(100% - 32px);margin:8px 16px 0;padding:10px;background:none;color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:var(--font-body);" onclick="openAdminPage(currentClubId)">⚙ Управление клубом</button>
+        <button class="club-chat-btn" id="clubChatBtn" onclick="openChat(currentClubId)">💬 Чат клуба</button>
         <div class="section-label" style="padding:12px 16px 4px;">Ближайшие события</div>
         <div id="clubEventsList"></div>
         <div class="section-label" style="padding:12px 16px 4px;">Участники</div>
@@ -253,6 +254,20 @@
         <div class="section-label">Все категории</div>
         <div class="tag-grid-full" id="allTagsPage"></div>
         <button class="step-btn" style="margin-top:16px;" onclick="saveInterests()">Сохранить →</button>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section class="screen" id="screen-chat">
+      <div class="chat-header-bar" id="chatHeaderBar"></div>
+      <div class="chat-online-bar" id="chatOnlineBar"></div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-row">
+        <button class="chat-attach">＋</button>
+        <input class="chat-input" id="chatInput" placeholder="Сообщение..." onkeydown="if(event.key==='Enter')sendChatMsg()">
+        <button class="chat-send-btn" onclick="sendChatMsg()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M3 10L17 3L10 17L9 11L3 10Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </section>
 
