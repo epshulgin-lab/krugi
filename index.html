@@ -203,6 +203,7 @@
           <p class="club-info-desc" id="clubInfoDesc"></p>
         </div>
         <button class="club-join-big" id="clubJoinBtn" onclick="joinCurrentClub()">Вступить в клуб</button>
+        <button class="outline-btn" id="clubAdminBtn" style="display:none;width:calc(100% - 32px);margin:8px 16px 0;padding:10px;background:none;color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:var(--font-body);" onclick="openAdminPage(currentClubId)">⚙ Управление клубом</button>
         <div class="section-label" style="padding:12px 16px 4px;">Ближайшие события</div>
         <div id="clubEventsList"></div>
         <div class="section-label" style="padding:12px 16px 4px;">Участники</div>
@@ -221,6 +222,70 @@
       </div>
     </section>
 
+    <!-- INTERESTS -->
+    <section class="screen" id="screen-interests">
+      <div class="club-page-back" onclick="switchScreen('profile', document.querySelector('[data-screen=profile]'))">
+        <span class="club-back-arrow">‹</span>
+        <span class="club-back-label">Профиль</span>
+      </div>
+      <div class="screen-scroll" style="padding-top:0; padding: 16px;">
+        <div style="margin-bottom:4px;" class="clubs-title">Мои интересы</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5;">Добавляйте любые — платформа найдёт людей с такими же</p>
+        <div class="section-label">Выбранные</div>
+        <div class="tag-grid-full" id="selectedTagsPage"></div>
+        <div class="section-label">Добавить свой</div>
+        <div class="custom-row">
+          <input class="custom-inp" id="customInterestInput" placeholder="Например: аквариумистика...">
+          <button class="custom-add-btn" onclick="addCustomInterest()">+ Добавить</button>
+        </div>
+        <div class="int-notice">Новый интерес попадёт в базу — если таких людей наберётся 10+, платформа предложит создать клуб</div>
+        <div class="section-label">Популярное сейчас</div>
+        <div class="suggest-row" id="suggestRow">
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🦜 Попугаи</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">♟ Шахматы</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🪴 Растения</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🎭 Театр</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🛹 Скейт</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🧶 Вязание</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🎮 Игры</span>
+          <span class="suggest-chip" onclick="addSuggestInterest(this)">🧩 Пазлы</span>
+        </div>
+        <div class="section-label">Все категории</div>
+        <div class="tag-grid-full" id="allTagsPage"></div>
+        <button class="step-btn" style="margin-top:16px;" onclick="saveInterests()">Сохранить →</button>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section class="screen" id="screen-admin">
+      <div class="club-page-back" onclick="switchScreen('clubs', document.querySelector('[data-screen=clubs]'))">
+        <span class="club-back-arrow">‹</span>
+        <span class="club-back-label" id="adminBackLabel">Клуб</span>
+      </div>
+      <div class="screen-scroll" style="padding-top:0; padding:16px;">
+        <div class="club-header-mini" id="adminClubHeader"></div>
+        <div class="admin-stats" id="adminStats"></div>
+        <div class="section-label">Управление</div>
+        <div id="adminMenuItems"></div>
+        <div class="section-label">Участники</div>
+        <div id="adminMembersList"></div>
+        <div class="section-label">Тариф</div>
+        <div class="plan-row">
+          <div class="plan-card current">
+            <div class="plan-name">Базовый <span class="plan-curr">Текущий</span></div>
+            <div class="plan-price">0 <span class="plan-price-sub">₽/мес</span></div>
+            <div class="plan-feat">До <span class="plan-feat-hi">50</span> участников<br>До <span class="plan-feat-hi">2</span> событий/мес<br>Базовая аналитика</div>
+          </div>
+          <div class="plan-card">
+            <div class="plan-name">Про</div>
+            <div class="plan-price">990 <span class="plan-price-sub">₽/мес</span></div>
+            <div class="plan-feat"><span class="plan-feat-hi">Без лимитов</span><br>Объявления всем<br><span class="plan-feat-hi">Полная</span> аналитика<br>Приоритет в ленте</div>
+          </div>
+        </div>
+        <button class="outline-btn" style="width:100%;padding:10px;background:none;color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:var(--font-body);">Перейти на Про →</button>
+      </div>
+    </section>
+
     <!-- PROFILE -->
     <section class="screen" id="screen-profile">
       <div class="screen-scroll">
@@ -236,7 +301,7 @@
           <div class="pstat"><div class="pstat-n">24</div><div class="pstat-l">знакомых</div></div>
         </div>
         <div class="profile-menu">
-          <div class="pmenu-item">
+          <div class="pmenu-item" onclick="openInterests()">
             <div class="pmenu-icon" style="background:#E1F5EE;">🎯</div>
             <span class="pmenu-text">Мои интересы</span>
             <span class="pmenu-arrow">›</span>
